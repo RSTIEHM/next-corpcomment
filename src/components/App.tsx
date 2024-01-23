@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react";
 import { TFeedbackItem } from "../lib/types";
-import Container from "./Container";
-import Footer from "./Footer";
-import HashtagList from "./HashtagList";
+import Container from "./layout/Container";
+import Footer from "./layout/Footer";
+import HashtagList from "./hashtags/HashtagList";
 
 function App() {
   const [feedbackItems, setFeedbackItems] = useState<TFeedbackItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("Nike");
 
-  const handleAddToList = (text: string) => {
+  const filteredFeedBackItems = feedbackItems.filter((item) => {
+    return item.company === selectedCompany;
+  });
+  const companyList = feedbackItems
+    .map((item) => item.company)
+    .filter((company, index, array) => {
+      return array.indexOf(company) === index;
+    });
+
+  const handleAddToList = async (text: string) => {
     const companyName = text
       .split(" ")
       .find((word) => word.includes("#"))!
@@ -20,10 +30,21 @@ function App() {
       text: text,
       upvoteCount: 0,
       daysAgo: 0,
-      companyName: companyName,
+      company: companyName,
       badgeLetter: companyName.substring(0, 1).toUpperCase(),
     };
     setFeedbackItems([...feedbackItems, newItem]);
+    await fetch(
+      "https://bytegrad.com/course-assets/projects/corpcomment/api/feedbacks",
+      {
+        method: "POST",
+        body: JSON.stringify(newItem),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -57,10 +78,10 @@ function App() {
       <Container
         error={error}
         isLoading={isLoading}
-        feedbackItems={feedbackItems}
+        feedbackItems={filteredFeedBackItems}
         handleAddToList={handleAddToList}
       />
-      <HashtagList />
+      <HashtagList companyList={companyList} />
     </div>
   );
 }
