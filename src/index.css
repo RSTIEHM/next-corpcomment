@@ -107,7 +107,7 @@ body {
 
 /* HEADER */
 header {
-  height: 277px;
+  height: 400px;
   background-color: #121618;
   display: flex;
   flex-direction: column;
