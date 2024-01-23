@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function Error({ error }) {
+export default function ErrorMessage({ error }) {
   return <p>{error}</p>;
 }

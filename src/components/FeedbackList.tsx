@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import FeedbackItem from "./FeedbackItem";
 import Spinner from "./Spinner";
-import Error from "./Error";
+import ErrorMessage from "./ErrorMessage";
 
 // const exampleFeedbackItems = [
 //   {
@@ -58,7 +58,7 @@ export default function FeedbackList() {
   return (
     <ol className="feedback-list">
       {isLoading && <Spinner />}
-      {error && <Error error={error} />}
+      {error && <ErrorMessage error={error} />}
       {feedbackItems.map((feedbackItem) => (
         <FeedbackItem key={feedbackItem.id} feedbackItem={feedbackItem} />
       ))}
